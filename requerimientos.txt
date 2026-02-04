@@ -1,0 +1,21 @@
+# Requerimientos para despliegue en Docker
+# HR Assistant - Análisis Inteligente de CVs
+
+# Framework Web
+streamlit>=1.32.0
+
+# Procesamiento de PDFs
+pdfplumber>=0.11.0
+
+# Análisis de Datos
+pandas>=2.2.0
+
+# Generación de PDFs
+fpdf>=1.7.2
+
+# Google Generative AI
+google-genai>=1.0.0
+
+# Dependencias adicionales para producción
+python-dotenv>=1.0.0
+pillow>=10.0.0

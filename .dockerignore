@@ -1,0 +1,21 @@
+# Archivos y directorios a ignorar en el build de Docker
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.git/
+.gitignore
+.env
+.vscode/
+.idea/
+*.md
+!README.md
+.DS_Store
+*.log

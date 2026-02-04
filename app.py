@@ -1,0 +1,390 @@
+import streamlit as st
+import pdfplumber
+import pandas as pd
+from google import genai
+from google.genai import types
+import json
+import time
+import concurrent.futures
+
+# --- configuración de la página ---
+st.set_page_config(
+    page_title="Asistente de RH - Análisis de CVs",
+    page_icon="👔",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- Inicialización de Estado ---
+if 'vacancies' not in st.session_state:
+    st.session_state['vacancies'] = {}
+if 'historial_candidatos' not in st.session_state:
+    st.session_state['historial_candidatos'] = []
+
+# --- estilos custom (minimalista/profesional) ---
+st.markdown("""
+<style>
+    .main {
+        background-color: #f8f9fa;
+    }
+    .stButton>button {
+        width: 100%;
+        border-radius: 5px;
+        height: 3em;
+        background-color: #007bff;
+        color: white;
+    }
+    .metric-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    .tag-strength {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .tag-gap {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .security-alert {
+        padding: 10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    .spinner {
+        border: 12px solid #f3f3f3;
+        border-top: 12px solid #007bff;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .history-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: white;
+        display: flex;
+        justify-content: space-between;
+        align_items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .history-card-rejected {
+        border: 2px solid #dc3545;
+        background-color: #fff8f8;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --- Sidebar ---
+with st.sidebar:
+    st.header("Configuración")
+    
+    # Intentar leer desde secrets.toml
+    if "GEMINI_API_KEY" in st.secrets:
+        api_key = st.secrets["GEMINI_API_KEY"]
+        st.success("🔑 API Key cargada desde configuración.")
+    else:
+        api_key = None
+        st.error("⚠️ Falta confirmar API Key en secrets.toml")
+        st.info("Crea un archivo `.streamlit/secrets.toml` con: `GEMINI_API_KEY = 'TU_CLAVE'`")
+
+    if not api_key:
+        st.warning("La aplicación requiere la clave para funcionar.")
+
+    st.markdown("---")
+    st.header("🏢 Configuración de Vacantes")
+    v_title = st.text_input("Título del Puesto", placeholder="Ej. Senior Python Dev")
+    v_desc = st.text_area("Requisitos Detallados", placeholder="Lista de habilidades...", height=150)
+    
+    if st.button("Guardar Vacante"):
+        if v_title and v_desc:
+            st.session_state['vacancies'][v_title] = v_desc
+            st.success(f"✅ '{v_title}' guardada.")
+        else:
+            st.error("❌ Completa ambos campos.")
+
+# --- Funciones de Lógica ---
+def extract_text_from_pdf(uploaded_file):
+    try:
+        with pdfplumber.open(uploaded_file) as pdf:
+            text = ""
+            for page in pdf.pages:
+                extracted = page.extract_text()
+                if extracted:
+                    text += extracted + "\n"
+        return text
+    except Exception as e:
+        st.error(f"Error leyendo PDF: {e}")
+        return None
+
+def evaluar_cv(texto_cv, vacante, api_key):
+    """
+    Evalúa el CV usando el SDK Google GenAI (v1.0+) con Thinking Config.
+    """
+    if not api_key:
+        return {"error": "Falta API Key"}
+
+    client = genai.Client(api_key=api_key)
+
+    # Prompt estructurado para JSON
+    full_prompt = f"""
+    Actúa como un reclutador experto. Analiza este CV para la vacante descrita.
+    
+    **VACANTE:**
+    {vacante}
+
+    **CV:**
+    {texto_cv[:15000]}
+
+    **SALIDA REQUERIDA (JSON):**
+    Responde ÚNICAMENTE con un JSON válido con esta estructura:
+    {{
+        "name": "Nombre completo",
+        "score": 0-100,
+        "summary": "Resumen de 3 líneas",
+        "strengths": ["f1", "f2", "f3"],
+        "gaps": ["b1", "b2", "b3"],
+        "security_warning": "Texto de alerta o null"
+    }}
+    """
+
+    try:
+        # Configuración "Thinking" + Instrucciones del Sistema (Pesos y Reglas)
+        result = client.models.generate_content(
+            model="gemini-3-flash-preview",
+            contents=full_prompt,
+            config=types.GenerateContentConfig(
+                thinking_config=types.ThinkingConfig(
+                    thinking_level="HIGH",
+                ),
+                system_instruction=types.Part.from_text(text="""Eres un Auditor de Talento experto. Tu misión es calificar CVs basándote estrictamente en los siguientes pesos:
+
+        Experiencia Comprobable (50%): Evalúa años, relevancia de cargos y logros.
+
+        Habilidades Técnicas y Proyectos (30%): Valida lenguajes, herramientas y proyectos prácticos mencionados.
+
+        Certificaciones Oficiales (15%): Verifica certificados emitidos por instituciones o plataformas reconocidas.
+
+        Habilidades Blandas (5%): Identifica rasgos como comunicación, liderazgo o trabajo en equipo.
+
+    Reglas de Oro:
+
+        Si detectas 'keyword stuffing' o información contradictoria, aplica una penalización del 50% al puntaje final y añade la etiqueta: 'ADVERTENCIA: Posible manipulación de datos' en security_warning.
+
+        Si el puntaje es mayor a 70 pero detectas dudas en la veracidad de la experiencia, añade texto: 'Requiere segunda evaluación' en security_warning."""),
+                response_mime_type="application/json", 
+            ),
+        )
+        
+        # Parsear respuesta
+        return json.loads(result.text)
+
+    except Exception as e:
+        return {
+            "name": "Error", 
+            "score": 0, 
+            "summary": f"Error técnico: {str(e)}", 
+            "strengths": [], 
+            "gaps": [], 
+            "security_warning": "Fallo en API GenAI"
+        }
+
+# --- UI Principal ---
+
+st.title("🤖 Asistente de RH - Analizador Inteligente")
+st.markdown("Sube los CVs de los candidatos y define la vacante para obtener un análisis potenciado por **Google Gemini**.")
+
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    st.subheader("1. Seleccionar Vacante")
+    
+    vacancy_names = list(st.session_state['vacancies'].keys())
+    
+    if vacancy_names:
+        selected_vacancy = st.selectbox("Selecciona la Vacante a Evaluar", vacancy_names)
+        job_description = st.session_state['vacancies'][selected_vacancy]
+        st.info(f"📋 **Requisitos cargados:** {len(job_description)} caracteres.")
+        with st.expander("Ver detalles de la vacante"):
+            st.write(job_description)
+    else:
+        st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
+        job_description = None
+    
+    st.subheader("2. Cargar Candidatos")
+    uploaded_files = st.file_uploader("Subir CVs (PDF)", type=["pdf"], accept_multiple_files=True)
+    
+    analyze_btn = st.button("Analizar Candidatos")
+
+with col2:
+    st.subheader("3. Resultados")
+    
+    if not uploaded_files or not job_description:
+        st.info("👈 Ingresa tu API Key, completa la descripción y sube CVs.")
+    
+    if analyze_btn and uploaded_files and job_description:
+        if not api_key:
+            st.error("❌ Por favor ingresa tu API Key en la barra lateral.")
+        else:
+            progress_bar = st.progress(0)
+            
+            for i, uploaded_file in enumerate(uploaded_files):
+                # Procesamiento
+                text = extract_text_from_pdf(uploaded_file)
+                
+                if text:
+                    # Mensajes de estado para UX (Solo Texto, la animación es CSS)
+                    status_messages = [
+                        "Leyendo estructura del CV...",
+                        "Extrayendo certificaciones y experiencia...",
+                        "Validando coherencia de trayectoria...",
+                        "Cruzando perfil con vacante..."
+                    ]
+                    
+                    status_placeholder = st.empty()
+                    
+                    with concurrent.futures.ThreadPoolExecutor() as executor:
+                        future = executor.submit(evaluar_cv, text, job_description, api_key)
+                        
+                        # Simular proceso visual (transparencia) con SPINNER ANIMADO
+                        for msg_text in status_messages:
+                            if future.done():
+                                break
+                            
+                            status_placeholder.markdown(f"""
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <h3 style="color: #444;">{msg_text}</h3>
+                                    <div class="spinner"></div>
+                                </div>
+                            """, unsafe_allow_html=True)
+                            time.sleep(2)
+                        
+                        # Esperar resultado final si aún no termina
+                        if not future.done():
+                            status_placeholder.markdown("""
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <h3 style="color: #444;">Generando veredicto final...</h3>
+                                    <div class="spinner"></div>
+                                </div>
+                            """, unsafe_allow_html=True)
+                        
+                        result = future.result()
+                        status_placeholder.empty() # Limpiar mensaje
+                    
+                    # Fallback de nombre si la AI falla o retorna error
+                    candidate_name = result.get('name', uploaded_file.name)
+                    
+                    # --- Guardar en Historial ---
+                    st.session_state['historial_candidatos'].append({
+                        "name": candidate_name,
+                        "vacancy": selected_vacancy, # Variable del scope principal
+                        "score": result.get('score', 0),
+                        "strengths": result.get('strengths', []),
+                        "gaps": result.get('gaps', []),
+                        "timestamp": time.time()
+                    })
+                    
+                    # --- Render Tarjeta de Candidato (Vista Actual) ---
+                    with st.container():
+                        st.markdown(f'<div class="metric-card">', unsafe_allow_html=True)
+                        
+                        # Encabezado
+                        c_col1, c_col2 = st.columns([1, 3])
+                        
+                        with c_col1:
+                            # Medidor Visual
+                            score = result.get('score', 0)
+                            st.metric(label="Compatibilidad", value=f"{score}%")
+                            st.progress(score/100)
+                        
+                        with c_col2:
+                            st.markdown(f"### {candidate_name}")
+                            st.markdown(f"**Resumen IA:**")
+                            st.markdown(f"_{result.get('summary', 'Sin resumen')}_")
+                            
+                            st.markdown("---")
+                            
+                            # Tags
+                            s_col, g_col = st.columns(2)
+                            with s_col:
+                                st.caption("✅ Fortalezas")
+                                for s in result.get('strengths', []):
+                                    st.markdown(f'<span class="tag tag-strength">{s}</span>', unsafe_allow_html=True)
+                            
+                            with g_col:
+                                st.caption("⚠️ Brechas / A desarrollar")
+                                for g in result.get('gaps', []):
+                                    st.markdown(f'<span class="tag tag-gap">{g}</span>', unsafe_allow_html=True)
+                            
+                            # Alerta de Seguridad
+                            security_warning = result.get('security_warning')
+                            if security_warning:
+                                 st.markdown(f'<div class="security-alert">🚨 {security_warning}</div>', unsafe_allow_html=True)
+
+                        st.markdown('</div>', unsafe_allow_html=True)
+                
+                else:
+                     st.error(f"Error al leer el archivo: {uploaded_file.name}")
+                
+                # Actualizar barra de progreso global
+                progress_bar.progress((i + 1) / len(uploaded_files))
+            
+            st.success("Análisis Completado")
+
+# --- Sección de Historial ---
+st.markdown("---")
+st.subheader("📜 Historial de Evaluaciones")
+
+if st.session_state['historial_candidatos']:
+    # Mostrar en orden inverso (más reciente primero)
+    for item in reversed(st.session_state['historial_candidatos']):
+        is_rejected = item['score'] == 0
+        card_class = "history-card history-card-rejected" if is_rejected else "history-card"
+        status_badge = '<span style="color: #dc3545; font-weight: bold;">⛔ ACCESO DENEGADO</span>' if is_rejected else f"✅ Score: {item['score']}%"
+        
+        # Generar HTML de la tarjeta
+        tags_html = ""
+        # Mostrar solo las primeras 2 fortalezas como resumen
+        for s in item['strengths'][:2]:
+            tags_html += f'<span class="tag tag-strength">{s}</span>'
+        
+        st.markdown(f"""
+        <div class="{card_class}">
+            <div style="flex: 2;">
+                <div style="font-size: 1.1em; font-weight: bold;">{item['name']}</div>
+                <div style="color: #666; font-size: 0.9em;">Postulando a: {item['vacancy']}</div>
+            </div>
+            <div style="flex: 3; padding: 0 15px;">
+                {tags_html}
+            </div>
+            <div style="flex: 1; text-align: right;">
+                <div style="font-size: 1.2em;">{status_badge}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    st.info("Aún no hay evaluaciones registradas en esta sesión.")
+

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  hr-assistant:
+    build: .
+    container_name: hr-assistant-app
+    ports:
+      - "8501:8501"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      # Montar la carpeta .streamlit para persistir configuración
+      - ./.streamlit:/app/.streamlit
+    restart: unless-stopped
+    networks:
+      - hr-network
+
+networks:
+  hr-network:
+    driver: bridge

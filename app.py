@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 import pdfplumber
 import pandas as pd
 from google import genai
@@ -102,14 +103,28 @@ st.markdown("""
 with st.sidebar:
     st.header("Configuración")
     
-    # Intentar leer desde secrets.toml
-    if "GEMINI_API_KEY" in st.secrets:
-        api_key = st.secrets["GEMINI_API_KEY"]
-        st.success("🔑 API Key cargada desde configuración.")
+    # 1. Intentar leer desde variables de entorno (Docker/Cloud)
+    api_key = os.environ.get("GEMINI_API_KEY")
+    
+    # 2. Si no hay variable de entorno, intentar leer secrets.toml (Local)
+    if not api_key:
+        try:
+            if "GEMINI_API_KEY" in st.secrets:
+                api_key = st.secrets["GEMINI_API_KEY"]
+                st.success("🔑 API Key cargada desde configuración.")
+        except Exception:
+            # st.secrets falla si no existe el archivo secrets.toml
+            pass
+
+    if api_key:
+        # Solo mostrar éxito si vino del entorno (el caso de secrets ya mostró mensaje arriba)
+        if "GEMINI_API_KEY" not in os.environ: 
+             pass # Ya mostramos el mensaje en el bloque try
+        else:
+             st.success("🔑 API Key cargada desde entorno.")
     else:
-        api_key = None
-        st.error("⚠️ Falta confirmar API Key en secrets.toml")
-        st.info("Crea un archivo `.streamlit/secrets.toml` con: `GEMINI_API_KEY = 'TU_CLAVE'`")
+        st.error("⚠️ Falta confirmar API Key")
+        st.info("Configura .env (Docker) o .streamlit/secrets.toml (Local)")
 
     if not api_key:
         st.warning("La aplicación requiere la clave para funcionar.")

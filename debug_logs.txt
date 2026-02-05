@@ -1,0 +1,1062 @@
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'
+Traceback (most recent call last):
+  File "/usr/local/bin/streamlit", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1485, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1406, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1873, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 1269, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/click/core.py", line 824, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 251, in main_run
+    _main_run(path_str, args, flag_options=kwargs)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/cli.py", line 325, in _main_run
+    bootstrap.run(main_script_path, is_hello, args, flag_options)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 463, in run
+    asyncio.run(main())
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 439, in main
+    await run_server()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/bootstrap.py", line 421, in run_server
+    await server.start()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 344, in start
+    app = self._create_app()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server.py", line 511, in _create_app
+    cookie_secret=get_cookie_secret(),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/web/server/server_util.py", line 119, in get_cookie_secret
+    if secrets_singleton.load_if_toml_exists():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 220, in load_if_toml_exists
+    self._parse()
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 365, in _parse
+    path_secrets, found_secrets_file_in_path = self._parse_file_path(path)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 324, in _parse_file_path
+    return self._parse_toml_file(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/secrets.py", line 254, in _parse_toml_file
+    with open(path, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/app/.streamlit/secrets.toml'

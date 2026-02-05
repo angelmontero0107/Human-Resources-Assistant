@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   hr-assistant:
     build: .
@@ -8,9 +6,9 @@ services:
       - "8501:8501"
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-    volumes:
-      # Montar la carpeta .streamlit para persistir configuración
-      - ./.streamlit:/app/.streamlit
+      # volumes:
+      # No montar .streamlit para evitar problemas de permisos de host vs contenedor
+      # - ./.streamlit:/app/.streamlit
     restart: unless-stopped
     networks:
       - hr-network

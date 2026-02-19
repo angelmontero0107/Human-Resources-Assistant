@@ -1,0 +1,15 @@
+credentials:
+  usernames:
+    reclutador1:
+      email: reclutador@example.com
+      failed_login_attempts: 0
+      first_name: Reclutador
+      last_name: Principal
+      logged_in: false
+      password: $2b$12$v47QLYgeXN5T8IMK0VDPXOu.61vDLUMAe6eY3D5uYRZ17oKb6TAh2 # Placeholder hash for 'password123'
+cookie:
+  expiry_days: 30
+  key: random_signature_key
+  name: hr_auth_cookie
+preauthorized:
+  emails: []

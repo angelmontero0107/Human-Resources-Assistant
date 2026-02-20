@@ -57,97 +57,123 @@ def get_db():
 
 db = get_db()
 
-# --- estilos custom (minimalista/profesional) ---
+# --- estilos custom (luz corporativo) ---
 st.markdown("""
 <style>
-    /* Forzar Modo Oscuro y Textos Blancos */
+    /* Reset and Typography */
     .stApp {
-        background-color: #0E1117;
-        color: #FFFFFF;
+        background-color: #f8f9fa;
+        color: #333333;
     }
-    [data-testid="stSidebar"] {
-        background-color: #262730;
+    h1, h2, h3, h4, h5, h6, .stMarkdown, .stText, label, .stCaption {
+        color: #1F2937 !important;
+        font-family: 'Inter', sans-serif;
     }
-    [data-testid="stSidebar"] > div:first-child {
-        padding-top: 2rem;
-    }
-    .main {
-        background-color: #0E1117;
-    }
-    h1, h2, h3, h4, h5, h6, p, div, span, label {
-        color: #FFFFFF !important;
-    }
-    
-    /* Estilo Base de Botones */
-    .stButton>button {
-        width: 100%;
+
+    /* Top Navigation Header Card */
+    .top-header-card {
+        background-color: #FFFFFF;
+        border: 1px solid #E5E7EB;
         border-radius: 8px;
-        height: 3em;
-        background-color: #262730; /* Fondo oscuro para botones secundarios */
-        color: #FFFFFF;
-        border: 1px solid #4F4F4F;
-        transition: all 0.3s ease;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .top-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .top-header-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #111827;
+        margin: 0;
+        line-height: 1.2;
+    }
+    .top-header-subtitle {
+        font-size: 0.8rem;
+        color: #6B7280;
+        margin: 0;
+    }
+    .top-header-button {
+        border: 1px solid #0284C7;
+        background-color: transparent;
+        color: #0284C7;
+        padding: 6px 16px;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    /* Sidebar Constraints */
+    [data-testid="stSidebar"] {
+        background-color: #1F2937;
+        border-right: 1px solid #374151;
+    }
+    [data-testid="stSidebar"] * {
+        color: #F9FAFB !important;
+    }
+    [data-testid="stSidebar"] .stTextInput > div > div, 
+    [data-testid="stSidebar"] .stTextArea > div > div {
+        background-color: #374151 !important;
+        border: 1px solid #4B5563;
+    }
+    [data-testid="stSidebar"] .stTextInput input, 
+    [data-testid="stSidebar"] .stTextArea textarea {
+        color: #F9FAFB !important;
+    }
+    [data-testid="stSidebar"] .streamlit-expanderHeader {
+        background-color: #374151 !important;
+        color: #F9FAFB !important;
+        border-radius: 4px;
     }
     
-    /* Estilo Botones Primarios (Gold Gradient) */
-    div.stButton > button:first-child {
-        background: linear-gradient(to right, #D4AF37, #C0A080);
-        color: #000000 !important; /* Texto negro para contraste */
+    /* Layout Containers for Sections */
+    .section-block {
+        background-color: #F3F4F6;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 8px;
+        margin-bottom: 32px;
+        border: 1px solid #E5E7EB;
+        color: #4B5563;
+        font-size: 0.95rem;
+    }
+
+    /* Primary Buttons */
+    div.stButton > button:first-child[data-testid="baseButton-primary"] {
+        background-color: #0284C7; 
+        color: white !important;
         border: none;
-        font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-    
-    /* Hover Effect para Primarios */
-    div.stButton > button:first-child:hover {
-        background: linear-gradient(to right, #C0A080, #D4AF37);
-        box-shadow: 0px 4px 12px rgba(212, 175, 55, 0.5);
-        transform: translateY(-2px);
-        color: #000000 !important;
+        font-weight: 600;
     }
 
-    /* Estilo Personalizado para Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        white-space: pre-wrap;
-        background-color: transparent;
-        border-radius: 4px 4px 0px 0px;
-        gap: 1px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        color: #FFFFFF;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: transparent;
-        border-bottom: 2px solid #D4AF37;
-        color: #D4AF37 !important;
-        font-weight: bold;
-    }
-
-    /* Estilo para Alertas (Info/Success/Error) en modo oscuro */
-    .stAlert {
-        background-color: #262730;
-        color: #FFFFFF;
-    }
-    div[data-baseweb="notification"] {
-        background-color: #3A3020; /* Fondo Marrón Oscuro */
-        border: 1px solid #D4AF37; /* Borde Dorado */
-    }
-    div[data-baseweb="notification"] p {
-        color: #F0E0C0 !important; /* Texto Beige */
-    }
-
-    /* Estilos de Tarjetas */
+    /* Metrics & History Cards (Light App) */
     .metric-card {
-        background-color: #262730;
+        background-color: #FFFFFF;
         padding: 20px;
         border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         margin-bottom: 20px;
-        border: 1px solid #4F4F4F;
+        border: 1px solid #E5E7EB;
+    }
+    .history-card {
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #FFFFFF;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .history-card-rejected {
+        border-left: 4px solid #EF4444;
     }
     .tag {
         display: inline-block;
@@ -157,54 +183,10 @@ st.markdown("""
         margin-right: 5px;
         margin-bottom: 5px;
         font-weight: 500;
-        color: #000000 !important;
     }
-    .tag-strength {
-        background-color: #D4AF37; /* Dorado */
-        color: #000000 !important;
-    }
-    .tag-gap {
-        background-color: #5A4A30; /* Marrón oscuro */
-        color: #F0E0C0 !important; /* Beige */
-        border: 1px solid #D4AF37;
-    }
-    .security-alert {
-        padding: 10px;
-        background-color: #3E1616; /* Rojo muy oscuro */
-        color: #FFB0B0 !important;
-        border: 1px solid #8B0000;
-        border-radius: 5px;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-    .spinner {
-        border: 12px solid #333;
-        border-top: 12px solid #D4AF37;
-        border-radius: 50%;
-        width: 80px;
-        height: 80px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    .history-card {
-        border: 1px solid #4F4F4F;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        background-color: #262730;
-        display: flex;
-        justify-content: space-between;
-        align_items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    .history-card-rejected {
-        border: 2px solid #8B0000;
-        background-color: #2A1010;
-    }
+    .tag-strength { background-color: #D1FAE5; color: #065F46 !important; }
+    .tag-gap { background-color: #FEF3C7; color: #92400E !important; }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -430,49 +412,64 @@ def load_history(recruiter_username=None):
         st.error(f"Error leyendo Firestore: {e}")
         return []
 
+
+# --- Lectura de Logo Global ---
+encoded_logo = ""
+try:
+    if os.path.exists("icon.png"):
+        with open("icon.png", "rb") as f:
+            encoded_logo = base64.b64encode(f.read()).decode()
+except:
+    pass
+
 # --- UI Principal ---
 
 if st.session_state["authentication_status"]:
-    # Nueva Cabecera con Branding
-    col_icon, col_title = st.columns([1, 8], gap="small")
-    with col_icon:
-        st.image("icon.png", width=60)
-    with col_title:
-        st.title("TalentForge AI")
+    # --- Top Navigation Navbar ---
+    img_tag = f'<img src="data:image/png;base64,{encoded_logo}" style="width: 28px; height: 28px; object-fit: contain;" alt="Logo">' if encoded_logo else '<span>💠</span>'
+    st.markdown(f'''
+        <div class="top-header-card">
+            <div class="top-header-left">
+                {img_tag}
+                <div>
+                    <h1 class="top-header-title">TalentForge AI</h1>
+                    <p class="top-header-subtitle">Smart Recruitment Solutions</p>
+                </div>
+            </div>
+            <div class="top-header-button">logo.png</div>
+        </div>
+    ''', unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["🔍 Nuevo Análisis", "📂 Historial Cloud"])
+    # Main Title Area
+    st.markdown("<h2 style='margin-bottom: 0;'>1 Asistente de RH - Analizador Inteligente</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #6B7280; font-size: 14px; margin-top: 5px; margin-bottom: 30px;'>Fissat Qealyles Oloow' (titrie)</p>", unsafe_allow_html=True)
 
-    with tab1:
-        st.markdown("Sube los CVs de los candidatos y define la vacante para obtener un análisis potenciado por **Google Gemini**.")
-
-        # --- Fila 1: Layout en 2 Columnas ---
-        row1_col1, row1_col2 = st.columns(2)
-
-        # Columna Izquierda: Vacante Activa
-        with row1_col1:
-            with st.container(border=True):
-                st.subheader("1. Vacante Activa")
-                vacancy_names = list(st.session_state['vacancies'].keys())
-                
-                if vacancy_names:
-                    selected_vacancy = st.selectbox("Selecciona Vacante", vacancy_names)
-                    job_description = st.session_state['vacancies'][selected_vacancy]
-                    st.success(f"**Puesto Seleccionado:** {selected_vacancy}")
-                    st.caption(f"Requisitos cargados: {len(job_description)} caracteres.")
-                    with st.expander("Ver descripción completa"):
-                        st.write(job_description)
-                else:
-                    st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
-                    job_description = None
+    # --- Fila 1: Layout en Secciones Apiladas ---
+    
+    # Columna Izquierda: Vacante Activa
+    st.markdown("<h3 style='margin-bottom: 10px; font-size: 1.3rem;'>1. Vacante Activa</h3>", unsafe_allow_html=True)
+    with st.container(border=True):
+        vacancy_names = list(st.session_state['vacancies'].keys())
         
-        # Columna Derecha: Carga y Acción
-        with row1_col2:
-            with st.container(border=True):
-                st.subheader("2. Cargar Candidatos")
-                uploaded_files = st.file_uploader("Arrastra y suelta los CVs (PDF)", type=["pdf"], accept_multiple_files=True)
-                
-                st.markdown("###") # Espaciado visual
-                analyze_btn = st.button("Analizar Candidatos", type="primary", use_container_width=True)
+        if vacancy_names:
+            selected_vacancy = st.selectbox("Selecciona Vacante", vacancy_names)
+            job_description = st.session_state['vacancies'][selected_vacancy]
+            st.success(f"**Puesto Seleccionado:** {selected_vacancy}")
+            st.caption(f"Requisitos cargados: {len(job_description)} caracteres.")
+            with st.expander("Ver descripción completa"):
+                st.write(job_description)
+        else:
+            st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
+            job_description = None
+    
+    # Columna Derecha: Carga y Acción
+    st.markdown("<h3 style='margin-top: 20px; margin-bottom: 10px; font-size: 1.3rem;'>2. Cargar Candidatos</h3>", unsafe_allow_html=True)
+    with st.container(border=True):
+        st.info("TalentForge AI evalúa rápidamente los perfiles de los candidatos. Selecciona tus archivos PDF para iniciar el análisis automático.")
+        uploaded_files = st.file_uploader("Arrastra y suelta los CVs (PDF)", type=["pdf"], accept_multiple_files=True)
+        
+        st.markdown("###") # Espaciado visual
+        analyze_btn = st.button("Analizar Candidatos", type="primary", use_container_width=True)
 
         # --- Fila 2: Resultados (Solo visible tras clic) ---
         if analyze_btn:

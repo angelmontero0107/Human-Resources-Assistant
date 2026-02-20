@@ -154,7 +154,6 @@ with st.sidebar:
         st.error(e)
 
     if st.session_state["authentication_status"]:
-        authenticator.logout("Cerrar Sesión", "sidebar")
         st.write(f'Hola *{st.session_state["name"]}*')
         st.markdown("---")
         
@@ -187,16 +186,20 @@ with st.sidebar:
             st.warning("La aplicación requiere la clave para funcionar.")
 
         st.markdown("---")
-        st.header("🏢 Configuración de Vacantes")
-        v_title = st.text_input("Título del Puesto", placeholder="Ej. Senior Python Dev")
-        v_desc = st.text_area("Requisitos Detallados", placeholder="Lista de habilidades...", height=150)
         
-        if st.button("Guardar Vacante"):
-            if v_title and v_desc:
-                st.session_state['vacancies'][v_title] = v_desc
-                st.success(f"✅ '{v_title}' guardada.")
-            else:
-                st.error("❌ Completa ambos campos.")
+        with st.expander("🏢 Configuración de Vacantes", expanded=True):
+            v_title = st.text_input("Título del Puesto", placeholder="Ej. Senior Python Dev")
+            v_desc = st.text_area("Requisitos Detallados", placeholder="Lista de habilidades...", height=150)
+            
+            if st.button("Guardar Vacante"):
+                if v_title and v_desc:
+                    st.session_state['vacancies'][v_title] = v_desc
+                    st.success(f"✅ '{v_title}' guardada.")
+                else:
+                    st.error("❌ Completa ambos campos.")
+
+        st.divider()
+        authenticator.logout("Cerrar Sesión", "sidebar")
     
     elif st.session_state["authentication_status"] is False:
         st.error('Usuario/Contraseña incorrecta')
@@ -342,164 +345,164 @@ if st.session_state["authentication_status"]:
     with tab1:
         st.markdown("Sube los CVs de los candidatos y define la vacante para obtener un análisis potenciado por **Google Gemini**.")
 
-        col1, col2 = st.columns([1, 2])
+        # --- Fila 1: Layout en 2 Columnas ---
+        row1_col1, row1_col2 = st.columns(2)
 
-        with col1:
-            st.subheader("1. Seleccionar Vacante")
-            
-            vacancy_names = list(st.session_state['vacancies'].keys())
-            
-            if vacancy_names:
-                selected_vacancy = st.selectbox("Selecciona la Vacante a Evaluar", vacancy_names)
-                job_description = st.session_state['vacancies'][selected_vacancy]
-                st.info(f"📋 **Requisitos cargados:** {len(job_description)} caracteres.")
-                with st.expander("Ver detalles de la vacante"):
-                    st.write(job_description)
-            else:
-                st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
-                job_description = None
-            
-            st.subheader("2. Cargar Candidatos")
-            uploaded_files = st.file_uploader("Subir CVs (PDF)", type=["pdf"], accept_multiple_files=True)
-            
-            analyze_btn = st.button("Analizar Candidatos")
-
-        with col2:
-            st.subheader("3. Resultados")
-            
-            if not uploaded_files or not job_description:
-                st.info("👈 Ingresa tu API Key, completa la descripción y sube CVs.")
-            
-            if analyze_btn and uploaded_files and job_description:
-                if not api_key:
-                    st.error("❌ Por favor ingresa tu API Key en la barra lateral.")
+        # Columna Izquierda: Vacante Activa
+        with row1_col1:
+            with st.container(border=True):
+                st.subheader("1. Vacante Activa")
+                vacancy_names = list(st.session_state['vacancies'].keys())
+                
+                if vacancy_names:
+                    selected_vacancy = st.selectbox("Selecciona Vacante", vacancy_names)
+                    job_description = st.session_state['vacancies'][selected_vacancy]
+                    st.success(f"**Puesto Seleccionado:** {selected_vacancy}")
+                    st.caption(f"Requisitos cargados: {len(job_description)} caracteres.")
+                    with st.expander("Ver descripción completa"):
+                        st.write(job_description)
                 else:
-                    progress_bar = st.progress(0)
+                    st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
+                    job_description = None
+        
+        # Columna Derecha: Carga y Acción
+        with row1_col2:
+            with st.container(border=True):
+                st.subheader("2. Cargar Candidatos")
+                uploaded_files = st.file_uploader("Arrastra y suelta los CVs (PDF)", type=["pdf"], accept_multiple_files=True)
+                
+                st.markdown("###") # Espaciado visual
+                analyze_btn = st.button("Analizar Candidatos", type="primary", use_container_width=True)
+
+        # --- Fila 2: Resultados (Solo visible tras clic) ---
+        if analyze_btn:
+            st.divider()
+            
+            # Validación de entradas
+            if not job_description:
+                 st.error("⚠️ Debes seleccionar una vacante activa.")
+            elif not uploaded_files:
+                 st.error("⚠️ Debes subir al menos un archivo PDF.")
+            elif not api_key:
+                 st.error("❌ Por favor ingresa tu API Key en la barra lateral.")
+            else:
+                st.subheader("3. Resultados del Análisis")
+                progress_bar = st.progress(0)
+                
+                for i, uploaded_file in enumerate(uploaded_files):
+                    # --- Lógica de Procesamiento ---
+                    text = extract_text_from_pdf(uploaded_file)
                     
-                    for i, uploaded_file in enumerate(uploaded_files):
-                        # Procesamiento
-                        text = extract_text_from_pdf(uploaded_file)
+                    if text:
+                        # UX: Mensajes de estado
+                        status_messages = [
+                            "Leyendo estructura del CV...",
+                            "Extrayendo certificaciones y experiencia...",
+                            "Validando coherencia de trayectoria...",
+                            "Cruzando perfil con vacante..."
+                        ]
                         
-                        if text:
-                            # Mensajes de estado para UX (Solo Texto, la animación es CSS)
-                            status_messages = [
-                                "Leyendo estructura del CV...",
-                                "Extrayendo certificaciones y experiencia...",
-                                "Validando coherencia de trayectoria...",
-                                "Cruzando perfil con vacante..."
-                            ]
+                        status_placeholder = st.empty()
+                        
+                        with concurrent.futures.ThreadPoolExecutor() as executor:
+                            future = executor.submit(evaluar_cv, text, job_description, api_key)
                             
-                            status_placeholder = st.empty()
-                            
-                            with concurrent.futures.ThreadPoolExecutor() as executor:
-                                future = executor.submit(evaluar_cv, text, job_description, api_key)
+                            # Animación de espera
+                            for msg_text in status_messages:
+                                if future.done():
+                                    break
                                 
-                                # Simular proceso visual (transparencia) con SPINNER ANIMADO
-                                for msg_text in status_messages:
-                                    if future.done():
-                                        break
-                                    
-                                    status_placeholder.markdown(f"""
-                                        <div style="text-align: center; margin: 20px 0;">
-                                            <h3 style="color: #444;">{msg_text}</h3>
-                                            <div class="spinner"></div>
-                                        </div>
-                                    """, unsafe_allow_html=True)
-                                    time.sleep(2)
-                                
-                                # Esperar resultado final si aún no termina
-                                if not future.done():
-                                    status_placeholder.markdown("""
-                                        <div style="text-align: center; margin: 20px 0;">
-                                            <h3 style="color: #444;">Generando veredicto final...</h3>
-                                            <div class="spinner"></div>
-                                        </div>
-                                    """, unsafe_allow_html=True)
-                                
-                                result = future.result()
-                                status_placeholder.empty() # Limpiar mensaje
+                                status_placeholder.markdown(f"""
+                                    <div style="text-align: center; margin: 20px 0;">
+                                        <h3 style="color: #444;">{msg_text}</h3>
+                                        <div class="spinner"></div>
+                                    </div>
+                                """, unsafe_allow_html=True)
+                                time.sleep(1.5)
                             
-                            # Fallback de nombre si la AI falla o retorna error
-                            candidate_name = result.get('name', uploaded_file.name)
+                            # Esperar si falta poco
+                            if not future.done():
+                                status_placeholder.markdown("""
+                                    <div style="text-align: center; margin: 20px 0;">
+                                        <h3 style="color: #444;">Generando veredicto final...</h3>
+                                        <div class="spinner"></div>
+                                    </div>
+                                """, unsafe_allow_html=True)
                             
-                            # Preparar datos
-                            analysis_data = {
-                                "name": candidate_name,
-                                "vacancy": selected_vacancy, # Variable del scope principal
-                                "score": result.get('score', 0),
-                                "strengths": result.get('strengths', []),
-                                "gaps": result.get('gaps', []),
-                                "summary": result.get('summary', 'Sin resumen')
-                            }
+                            result = future.result()
+                            status_placeholder.empty()
+                        
+                        candidate_name = result.get('name', uploaded_file.name)
+                        
+                        # Datos Estructurados
+                        analysis_data = {
+                            "name": candidate_name,
+                            "vacancy": selected_vacancy,
+                            "score": result.get('score', 0),
+                            "strengths": result.get('strengths', []),
+                            "gaps": result.get('gaps', []),
+                            "summary": result.get('summary', 'Sin resumen')
+                        }
 
-                            # --- Guardar en Historial Local ---
-                            st.session_state['historial_candidatos'].append(analysis_data)
+                        # Persistencia
+                        st.session_state['historial_candidatos'].append(analysis_data)
+                        if not result.get('error'):
+                            save_to_firestore(analysis_data, st.session_state.get("username", "Unknown"))
+                        
+                        # Renderizado de Tarjeta de Resultados
+                        with st.container():
+                            st.markdown(f'<div class="metric-card">', unsafe_allow_html=True)
                             
-                            # --- Guardar en Firestore ---
-                            if not result.get('error'):
-                                save_to_firestore(analysis_data, st.session_state.get("username", "Unknown"))
+                            c_col1, c_col2 = st.columns([1, 3])
                             
-                            # --- Render Tarjeta de Candidato (Vista Actual) ---
-                            with st.container():
-                                st.markdown(f'<div class="metric-card">', unsafe_allow_html=True)
+                            with c_col1:
+                                score = result.get('score', 0)
+                                st.metric(label="Compatibilidad", value=f"{score}%")
+                                st.progress(score/100)
+                            
+                            with c_col2:
+                                st.markdown(f"### {candidate_name}")
+                                st.markdown(f"**Resumen IA:**")
+                                st.markdown(f"_{result.get('summary', 'Sin resumen')}_")
                                 
-                                # Encabezado
-                                c_col1, c_col2 = st.columns([1, 3])
+                                st.markdown("---")
                                 
-                                with c_col1:
-                                    # Medidor Visual
-                                    score = result.get('score', 0)
-                                    st.metric(label="Compatibilidad", value=f"{score}%")
-                                    st.progress(score/100)
+                                s_col, g_col = st.columns(2)
+                                with s_col:
+                                    st.caption("✅ Fortalezas")
+                                    for s in result.get('strengths', []):
+                                        st.markdown(f'<span class="tag tag-strength">{s}</span>', unsafe_allow_html=True)
                                 
-                                with c_col2:
-                                    st.markdown(f"### {candidate_name}")
-                                    st.markdown(f"**Resumen IA:**")
-                                    st.markdown(f"_{result.get('summary', 'Sin resumen')}_")
-                                    
-                                    st.markdown("---")
-                                    
-                                    # Tags
-                                    s_col, g_col = st.columns(2)
-                                    with s_col:
-                                        st.caption("✅ Fortalezas")
-                                        for s in result.get('strengths', []):
-                                            st.markdown(f'<span class="tag tag-strength">{s}</span>', unsafe_allow_html=True)
-                                    
-                                    with g_col:
-                                        st.caption("⚠️ Brechas / A desarrollar")
-                                        for g in result.get('gaps', []):
-                                            st.markdown(f'<span class="tag tag-gap">{g}</span>', unsafe_allow_html=True)
-                                    
-                                    # Alerta de Seguridad
-                                    security_warning = result.get('security_warning')
-                                    if security_warning:
-                                         st.markdown(f'<div class="security-alert">🚨 {security_warning}</div>', unsafe_allow_html=True)
+                                with g_col:
+                                    st.caption("⚠️ Brechas / A desarrollar")
+                                    for g in result.get('gaps', []):
+                                        st.markdown(f'<span class="tag tag-gap">{g}</span>', unsafe_allow_html=True)
+                                
+                                security_warning = result.get('security_warning')
+                                if security_warning:
+                                     st.markdown(f'<div class="security-alert">🚨 {security_warning}</div>', unsafe_allow_html=True)
 
-                                st.markdown('</div>', unsafe_allow_html=True)
+                            st.markdown('</div>', unsafe_allow_html=True)
                         
-                        else:
-                             st.error(f"Error al leer el archivo: {uploaded_file.name}")
-                        
-                        # Actualizar barra de progreso global
-                        progress_bar.progress((i + 1) / len(uploaded_files))
+                    else:
+                         st.error(f"Error al leer el archivo: {uploaded_file.name}")
                     
-                    st.success("Análisis Completado")
+                    progress_bar.progress((i + 1) / len(uploaded_files))
+                
+                st.success("✅ Análisis Completado")
 
-        # --- Sección de Historial Local ---
+        # --- Sección Footer: Historial Session ---
         st.markdown("---")
         st.subheader("📜 Historial de Sesión Actual")
 
         if st.session_state['historial_candidatos']:
-            # Mostrar en orden inverso (más reciente primero)
+            # Mostrar más reciente primero
             for item in reversed(st.session_state['historial_candidatos']):
                 is_rejected = item.get('score', 0) == 0
                 card_class = "history-card history-card-rejected" if is_rejected else "history-card"
                 status_badge = '<span style="color: #dc3545; font-weight: bold;">⛔ ACCESO DENEGADO</span>' if is_rejected else f"✅ Score: {item.get('score', 0)}%"
                 
-                # Generar HTML de la tarjeta
                 tags_html = ""
-                # Mostrar solo las primeras 2 fortalezas como resumen
                 for s in item.get('strengths', [])[:2]:
                     tags_html += f'<span class="tag tag-strength">{s}</span>'
                 
@@ -521,11 +524,18 @@ if st.session_state["authentication_status"]:
             st.info("Aún no hay evaluaciones registradas en esta sesión.")
     
     with tab2:
-        st.header("📂 Historial de Análisis (Cloud)")
-        st.markdown("Registros persistentes recuperados de Google Firestore.")
-
-        if st.button("🔄 Refrescar Historial"):
-            st.session_state.pop('firestore_data', None)
+        # Encabezado con columnas
+        h_col1, h_col2 = st.columns([3, 1])
+        
+        with h_col1:
+            st.subheader("📂 Historial de Análisis")
+            st.caption("Registros persistentes recuperados de Google Firestore.")
+        
+        with h_col2:
+            st.markdown("###") # Spacer para alineación vertical
+            if st.button("🔄 Refrescar Tabla", use_container_width=True):
+                st.session_state.pop('firestore_data', None)
+                # El rerun es automático en Streamlit al interactuar
 
         # Cargar datos
         history_data = load_history()

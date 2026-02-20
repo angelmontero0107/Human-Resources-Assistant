@@ -135,6 +135,18 @@ st.markdown("""
 
 # --- Sidebar ---
 with st.sidebar:
+    # Logo Image
+    try:
+        if os.path.exists("logo.png"):
+            st.image("logo.png", use_container_width=True)
+        else:
+            st.title("🤖 Asistente de RH")
+    except Exception:
+        # Fallback seguro para evitar error disclosure
+        st.title("🤖 Asistente de RH")
+
+    st.markdown("---")
+
     # Login Widget
     try:
         authenticator.login()

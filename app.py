@@ -12,6 +12,7 @@ from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
 from google.cloud import firestore
 from datetime import datetime
+import base64
 
 # --- configuración de la página ---
 st.set_page_config(
@@ -59,16 +60,44 @@ db = get_db()
 # --- estilos custom (minimalista/profesional) ---
 st.markdown("""
 <style>
+    /* Ajuste de Espaciado Sidebar */
+    [data-testid="stSidebar"] > div:first-child {
+        padding-top: 2rem;
+    }
     .main {
         background-color: #f8f9fa;
     }
+    
+    /* Estilo Base de Botones */
     .stButton>button {
         width: 100%;
-        border-radius: 5px;
+        border-radius: 8px;
         height: 3em;
-        background-color: #007bff;
+        background-color: white; /* Color para secundarios */
+        color: #333;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+    /* Estilo Botones Primarios (Gradient) */
+    div.stButton > button:first-child {
+        background: linear-gradient(to right, #00C6FF, #8E2DE2);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Hover Effect para Primarios */
+    div.stButton > button:first-child:hover {
+        background: linear-gradient(to right, #8E2DE2, #00C6FF);
+        box-shadow: 0 6px 12px rgba(142, 45, 226, 0.4);
+        transform: translateY(-1px);
         color: white;
     }
+
+    /* Target específico para botones "secondary" si es necesario diferenciarlos más */
+    /* Streamlit a veces usa el mismo selector base, pero el workaround de :first-child suele capturar bien */
+    
     .metric-card {
         background-color: white;
         padding: 20px;
@@ -135,10 +164,29 @@ st.markdown("""
 
 # --- Sidebar ---
 with st.sidebar:
-    # Logo Image
+    # Logo Image con ajuste de contraste y tamaño
     try:
         if os.path.exists("logo.png"):
-            st.image("logo.png", use_container_width=True)
+            # Leer imagen para base64
+            with open("logo.png", "rb") as f:
+                data = f.read()
+            encoded_image = base64.b64encode(data).decode()
+            
+            st.markdown(
+                f"""
+                <div style="
+                    background-color: white; 
+                    padding: 15px; 
+                    border-radius: 10px; 
+                    margin-bottom: 5px; 
+                    text-align: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                ">
+                    <img src="data:image/png;base64,{encoded_image}" style="width: 180px; max-width: 100%;">
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
         else:
             st.title("🤖 Asistente de RH")
     except Exception:

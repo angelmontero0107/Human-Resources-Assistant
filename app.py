@@ -60,12 +60,22 @@ db = get_db()
 # --- estilos custom (minimalista/profesional) ---
 st.markdown("""
 <style>
-    /* Ajuste de Espaciado Sidebar */
+    /* Forzar Modo Oscuro y Textos Blancos */
+    .stApp {
+        background-color: #0E1117;
+        color: #FFFFFF;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #262730;
+    }
     [data-testid="stSidebar"] > div:first-child {
         padding-top: 2rem;
     }
     .main {
-        background-color: #f8f9fa;
+        background-color: #0E1117;
+    }
+    h1, h2, h3, h4, h5, h6, p, div, span, label {
+        color: #FFFFFF !important;
     }
     
     /* Estilo Base de Botones */
@@ -73,37 +83,71 @@ st.markdown("""
         width: 100%;
         border-radius: 8px;
         height: 3em;
-        background-color: white; /* Color para secundarios */
-        color: #333;
-        border: 1px solid #ddd;
+        background-color: #262730; /* Fondo oscuro para botones secundarios */
+        color: #FFFFFF;
+        border: 1px solid #4F4F4F;
         transition: all 0.3s ease;
     }
-
-    /* Estilo Botones Primarios (Gradient) */
+    
+    /* Estilo Botones Primarios (Gold Gradient) */
     div.stButton > button:first-child {
-        background: linear-gradient(to right, #00C6FF, #8E2DE2);
-        color: white;
+        background: linear-gradient(to right, #D4AF37, #C0A080);
+        color: #000000 !important; /* Texto negro para contraste */
         border: none;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
     
     /* Hover Effect para Primarios */
     div.stButton > button:first-child:hover {
-        background: linear-gradient(to right, #8E2DE2, #00C6FF);
-        box-shadow: 0 6px 12px rgba(142, 45, 226, 0.4);
-        transform: translateY(-1px);
-        color: white;
+        background: linear-gradient(to right, #C0A080, #D4AF37);
+        box-shadow: 0px 4px 12px rgba(212, 175, 55, 0.5);
+        transform: translateY(-2px);
+        color: #000000 !important;
     }
 
-    /* Target específico para botones "secondary" si es necesario diferenciarlos más */
-    /* Streamlit a veces usa el mismo selector base, pero el workaround de :first-child suele capturar bien */
-    
+    /* Estilo Personalizado para Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: transparent;
+        border-radius: 4px 4px 0px 0px;
+        gap: 1px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #FFFFFF;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: transparent;
+        border-bottom: 2px solid #D4AF37;
+        color: #D4AF37 !important;
+        font-weight: bold;
+    }
+
+    /* Estilo para Alertas (Info/Success/Error) en modo oscuro */
+    .stAlert {
+        background-color: #262730;
+        color: #FFFFFF;
+    }
+    div[data-baseweb="notification"] {
+        background-color: #3A3020; /* Fondo Marrón Oscuro */
+        border: 1px solid #D4AF37; /* Borde Dorado */
+    }
+    div[data-baseweb="notification"] p {
+        color: #F0E0C0 !important; /* Texto Beige */
+    }
+
+    /* Estilos de Tarjetas */
     .metric-card {
-        background-color: white;
+        background-color: #262730;
         padding: 20px;
         border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         margin-bottom: 20px;
+        border: 1px solid #4F4F4F;
     }
     .tag {
         display: inline-block;
@@ -113,27 +157,29 @@ st.markdown("""
         margin-right: 5px;
         margin-bottom: 5px;
         font-weight: 500;
+        color: #000000 !important;
     }
     .tag-strength {
-        background-color: #d4edda;
-        color: #155724;
+        background-color: #D4AF37; /* Dorado */
+        color: #000000 !important;
     }
     .tag-gap {
-        background-color: #fff3cd;
-        color: #856404;
+        background-color: #5A4A30; /* Marrón oscuro */
+        color: #F0E0C0 !important; /* Beige */
+        border: 1px solid #D4AF37;
     }
     .security-alert {
         padding: 10px;
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+        background-color: #3E1616; /* Rojo muy oscuro */
+        color: #FFB0B0 !important;
+        border: 1px solid #8B0000;
         border-radius: 5px;
         margin-top: 10px;
         font-weight: bold;
     }
     .spinner {
-        border: 12px solid #f3f3f3;
-        border-top: 12px solid #007bff;
+        border: 12px solid #333;
+        border-top: 12px solid #D4AF37;
         border-radius: 50%;
         width: 80px;
         height: 80px;
@@ -145,19 +191,19 @@ st.markdown("""
         100% { transform: rotate(360deg); }
     }
     .history-card {
-        border: 1px solid #e0e0e0;
+        border: 1px solid #4F4F4F;
         border-radius: 8px;
         padding: 15px;
         margin-bottom: 15px;
-        background-color: white;
+        background-color: #262730;
         display: flex;
         justify-content: space-between;
         align_items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .history-card-rejected {
-        border: 2px solid #dc3545;
-        background-color: #fff8f8;
+        border: 2px solid #8B0000;
+        background-color: #2A1010;
     }
 </style>
 """, unsafe_allow_html=True)

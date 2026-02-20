@@ -10,6 +10,8 @@ import concurrent.futures
 import yaml
 from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
+from google.cloud import firestore
+from datetime import datetime
 
 # --- configuración de la página ---
 st.set_page_config(
@@ -36,6 +38,23 @@ authenticator = stauth.Authenticate(
     config['cookie']['expiry_days'],
     # preauthorized=config['preauthorized'] # Optional
 )
+
+# --- Firestore Setup ---
+# Usar variable de entorno o credenciales por defecto
+if "GOOGLE_APPLICATION_CREDENTIALS" not in os.environ:
+    # Opción para desarrollo local si no hay auth configurada explícitamente, 
+    # aunque Firestore requiere credenciales. 
+    # Streamlit Cloud usualmente inyecta secretos o usa key files.
+    pass
+
+@st.cache_resource
+def get_db():
+    try:
+        return firestore.Client()
+    except Exception as e:
+        return None
+
+db = get_db()
 
 # --- estilos custom (minimalista/profesional) ---
 st.markdown("""
@@ -259,182 +278,273 @@ def evaluar_cv(texto_cv, vacante, api_key):
             "security_warning": "Fallo en API GenAI"
         }
 
+def save_to_firestore(data, recruiter_username):
+    """Guarda el resultado del análisis en Firestore"""
+    if not db:
+        st.warning("⚠️ Sin conexión a Firestore - Datos no persisten en la nube")
+        return
+
+    try:
+        doc_ref = db.collection("analisis_cv").document()
+        doc_ref.set({
+            "candidate_name": data.get("name", "Desconocido"),
+            "vacancy": data.get("vacancy", "General"),
+            "score": data.get("score", 0),
+            "summary": data.get("summary", ""),
+            "recruiter": recruiter_username,
+            "timestamp": datetime.now(),
+            "strengths": data.get("strengths", []),
+            "gaps": data.get("gaps", [])
+        })
+        return True
+    except Exception as e:
+        st.error(f"Error guardando en Firestore: {e}")
+        return False
+
+def load_history(recruiter_username=None):
+    """Carga historial desde Firestore"""
+    if not db:
+        return []
+    
+    try:
+        docs = db.collection("analisis_cv").order_by("timestamp", direction=firestore.Query.DESCENDING).stream()
+        history = []
+        for doc in docs:
+            d = doc.to_dict()
+            # Opcional: Filtrar por reclutador si se desea privacidad por usuario
+            # if recruiter_username and d.get("recruiter") != recruiter_username:
+            #     continue
+            history.append(d)
+        return history
+    except Exception as e:
+        st.error(f"Error leyendo Firestore: {e}")
+        return []
+
 # --- UI Principal ---
 
 if st.session_state["authentication_status"]:
     st.title("🤖 Asistente de RH - Analizador Inteligente")
-    st.markdown("Sube los CVs de los candidatos y define la vacante para obtener un análisis potenciado por **Google Gemini**.")
+    
+    tab1, tab2 = st.tabs(["🔍 Nuevo Análisis", "📂 Historial Cloud"])
 
-    col1, col2 = st.columns([1, 2])
+    with tab1:
+        st.markdown("Sube los CVs de los candidatos y define la vacante para obtener un análisis potenciado por **Google Gemini**.")
 
-    with col1:
-        st.subheader("1. Seleccionar Vacante")
-        
-        vacancy_names = list(st.session_state['vacancies'].keys())
-        
-        if vacancy_names:
-            selected_vacancy = st.selectbox("Selecciona la Vacante a Evaluar", vacancy_names)
-            job_description = st.session_state['vacancies'][selected_vacancy]
-            st.info(f"📋 **Requisitos cargados:** {len(job_description)} caracteres.")
-            with st.expander("Ver detalles de la vacante"):
-                st.write(job_description)
-        else:
-            st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
-            job_description = None
-        
-        st.subheader("2. Cargar Candidatos")
-        uploaded_files = st.file_uploader("Subir CVs (PDF)", type=["pdf"], accept_multiple_files=True)
-        
-        analyze_btn = st.button("Analizar Candidatos")
+        col1, col2 = st.columns([1, 2])
 
-    with col2:
-        st.subheader("3. Resultados")
-        
-        if not uploaded_files or not job_description:
-            st.info("👈 Ingresa tu API Key, completa la descripción y sube CVs.")
-        
-        if analyze_btn and uploaded_files and job_description:
-            if not api_key:
-                st.error("❌ Por favor ingresa tu API Key en la barra lateral.")
+        with col1:
+            st.subheader("1. Seleccionar Vacante")
+            
+            vacancy_names = list(st.session_state['vacancies'].keys())
+            
+            if vacancy_names:
+                selected_vacancy = st.selectbox("Selecciona la Vacante a Evaluar", vacancy_names)
+                job_description = st.session_state['vacancies'][selected_vacancy]
+                st.info(f"📋 **Requisitos cargados:** {len(job_description)} caracteres.")
+                with st.expander("Ver detalles de la vacante"):
+                    st.write(job_description)
             else:
-                progress_bar = st.progress(0)
-                
-                for i, uploaded_file in enumerate(uploaded_files):
-                    # Procesamiento
-                    text = extract_text_from_pdf(uploaded_file)
-                    
-                    if text:
-                        # Mensajes de estado para UX (Solo Texto, la animación es CSS)
-                        status_messages = [
-                            "Leyendo estructura del CV...",
-                            "Extrayendo certificaciones y experiencia...",
-                            "Validando coherencia de trayectoria...",
-                            "Cruzando perfil con vacante..."
-                        ]
-                        
-                        status_placeholder = st.empty()
-                        
-                        with concurrent.futures.ThreadPoolExecutor() as executor:
-                            future = executor.submit(evaluar_cv, text, job_description, api_key)
-                            
-                            # Simular proceso visual (transparencia) con SPINNER ANIMADO
-                            for msg_text in status_messages:
-                                if future.done():
-                                    break
-                                
-                                status_placeholder.markdown(f"""
-                                    <div style="text-align: center; margin: 20px 0;">
-                                        <h3 style="color: #444;">{msg_text}</h3>
-                                        <div class="spinner"></div>
-                                    </div>
-                                """, unsafe_allow_html=True)
-                                time.sleep(2)
-                            
-                            # Esperar resultado final si aún no termina
-                            if not future.done():
-                                status_placeholder.markdown("""
-                                    <div style="text-align: center; margin: 20px 0;">
-                                        <h3 style="color: #444;">Generando veredicto final...</h3>
-                                        <div class="spinner"></div>
-                                    </div>
-                                """, unsafe_allow_html=True)
-                            
-                            result = future.result()
-                            status_placeholder.empty() # Limpiar mensaje
-                        
-                        # Fallback de nombre si la AI falla o retorna error
-                        candidate_name = result.get('name', uploaded_file.name)
-                        
-                        # --- Guardar en Historial ---
-                        st.session_state['historial_candidatos'].append({
-                            "name": candidate_name,
-                            "vacancy": selected_vacancy, # Variable del scope principal
-                            "score": result.get('score', 0),
-                            "strengths": result.get('strengths', []),
-                            "gaps": result.get('gaps', []),
-                            "timestamp": time.time()
-                        })
-                        
-                        # --- Render Tarjeta de Candidato (Vista Actual) ---
-                        with st.container():
-                            st.markdown(f'<div class="metric-card">', unsafe_allow_html=True)
-                            
-                            # Encabezado
-                            c_col1, c_col2 = st.columns([1, 3])
-                            
-                            with c_col1:
-                                # Medidor Visual
-                                score = result.get('score', 0)
-                                st.metric(label="Compatibilidad", value=f"{score}%")
-                                st.progress(score/100)
-                            
-                            with c_col2:
-                                st.markdown(f"### {candidate_name}")
-                                st.markdown(f"**Resumen IA:**")
-                                st.markdown(f"_{result.get('summary', 'Sin resumen')}_")
-                                
-                                st.markdown("---")
-                                
-                                # Tags
-                                s_col, g_col = st.columns(2)
-                                with s_col:
-                                    st.caption("✅ Fortalezas")
-                                    for s in result.get('strengths', []):
-                                        st.markdown(f'<span class="tag tag-strength">{s}</span>', unsafe_allow_html=True)
-                                
-                                with g_col:
-                                    st.caption("⚠️ Brechas / A desarrollar")
-                                    for g in result.get('gaps', []):
-                                        st.markdown(f'<span class="tag tag-gap">{g}</span>', unsafe_allow_html=True)
-                                
-                                # Alerta de Seguridad
-                                security_warning = result.get('security_warning')
-                                if security_warning:
-                                     st.markdown(f'<div class="security-alert">🚨 {security_warning}</div>', unsafe_allow_html=True)
-
-                            st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    else:
-                         st.error(f"Error al leer el archivo: {uploaded_file.name}")
-                    
-                    # Actualizar barra de progreso global
-                    progress_bar.progress((i + 1) / len(uploaded_files))
-                
-                st.success("Análisis Completado")
-
-    # --- Sección de Historial ---
-    st.markdown("---")
-    st.subheader("📜 Historial de Evaluaciones")
-
-    if st.session_state['historial_candidatos']:
-        # Mostrar en orden inverso (más reciente primero)
-        for item in reversed(st.session_state['historial_candidatos']):
-            is_rejected = item['score'] == 0
-            card_class = "history-card history-card-rejected" if is_rejected else "history-card"
-            status_badge = '<span style="color: #dc3545; font-weight: bold;">⛔ ACCESO DENEGADO</span>' if is_rejected else f"✅ Score: {item['score']}%"
+                st.warning("👈 Agrega una vacante en la barra lateral para comenzar.")
+                job_description = None
             
-            # Generar HTML de la tarjeta
-            tags_html = ""
-            # Mostrar solo las primeras 2 fortalezas como resumen
-            for s in item['strengths'][:2]:
-                tags_html += f'<span class="tag tag-strength">{s}</span>'
+            st.subheader("2. Cargar Candidatos")
+            uploaded_files = st.file_uploader("Subir CVs (PDF)", type=["pdf"], accept_multiple_files=True)
             
-            st.markdown(f"""
-            <div class="{card_class}">
-                <div style="flex: 2;">
-                    <div style="font-size: 1.1em; font-weight: bold;">{item['name']}</div>
-                    <div style="color: #666; font-size: 0.9em;">Postulando a: {item['vacancy']}</div>
+            analyze_btn = st.button("Analizar Candidatos")
+
+        with col2:
+            st.subheader("3. Resultados")
+            
+            if not uploaded_files or not job_description:
+                st.info("👈 Ingresa tu API Key, completa la descripción y sube CVs.")
+            
+            if analyze_btn and uploaded_files and job_description:
+                if not api_key:
+                    st.error("❌ Por favor ingresa tu API Key en la barra lateral.")
+                else:
+                    progress_bar = st.progress(0)
+                    
+                    for i, uploaded_file in enumerate(uploaded_files):
+                        # Procesamiento
+                        text = extract_text_from_pdf(uploaded_file)
+                        
+                        if text:
+                            # Mensajes de estado para UX (Solo Texto, la animación es CSS)
+                            status_messages = [
+                                "Leyendo estructura del CV...",
+                                "Extrayendo certificaciones y experiencia...",
+                                "Validando coherencia de trayectoria...",
+                                "Cruzando perfil con vacante..."
+                            ]
+                            
+                            status_placeholder = st.empty()
+                            
+                            with concurrent.futures.ThreadPoolExecutor() as executor:
+                                future = executor.submit(evaluar_cv, text, job_description, api_key)
+                                
+                                # Simular proceso visual (transparencia) con SPINNER ANIMADO
+                                for msg_text in status_messages:
+                                    if future.done():
+                                        break
+                                    
+                                    status_placeholder.markdown(f"""
+                                        <div style="text-align: center; margin: 20px 0;">
+                                            <h3 style="color: #444;">{msg_text}</h3>
+                                            <div class="spinner"></div>
+                                        </div>
+                                    """, unsafe_allow_html=True)
+                                    time.sleep(2)
+                                
+                                # Esperar resultado final si aún no termina
+                                if not future.done():
+                                    status_placeholder.markdown("""
+                                        <div style="text-align: center; margin: 20px 0;">
+                                            <h3 style="color: #444;">Generando veredicto final...</h3>
+                                            <div class="spinner"></div>
+                                        </div>
+                                    """, unsafe_allow_html=True)
+                                
+                                result = future.result()
+                                status_placeholder.empty() # Limpiar mensaje
+                            
+                            # Fallback de nombre si la AI falla o retorna error
+                            candidate_name = result.get('name', uploaded_file.name)
+                            
+                            # Preparar datos
+                            analysis_data = {
+                                "name": candidate_name,
+                                "vacancy": selected_vacancy, # Variable del scope principal
+                                "score": result.get('score', 0),
+                                "strengths": result.get('strengths', []),
+                                "gaps": result.get('gaps', []),
+                                "summary": result.get('summary', 'Sin resumen')
+                            }
+
+                            # --- Guardar en Historial Local ---
+                            st.session_state['historial_candidatos'].append(analysis_data)
+                            
+                            # --- Guardar en Firestore ---
+                            if not result.get('error'):
+                                save_to_firestore(analysis_data, st.session_state.get("username", "Unknown"))
+                            
+                            # --- Render Tarjeta de Candidato (Vista Actual) ---
+                            with st.container():
+                                st.markdown(f'<div class="metric-card">', unsafe_allow_html=True)
+                                
+                                # Encabezado
+                                c_col1, c_col2 = st.columns([1, 3])
+                                
+                                with c_col1:
+                                    # Medidor Visual
+                                    score = result.get('score', 0)
+                                    st.metric(label="Compatibilidad", value=f"{score}%")
+                                    st.progress(score/100)
+                                
+                                with c_col2:
+                                    st.markdown(f"### {candidate_name}")
+                                    st.markdown(f"**Resumen IA:**")
+                                    st.markdown(f"_{result.get('summary', 'Sin resumen')}_")
+                                    
+                                    st.markdown("---")
+                                    
+                                    # Tags
+                                    s_col, g_col = st.columns(2)
+                                    with s_col:
+                                        st.caption("✅ Fortalezas")
+                                        for s in result.get('strengths', []):
+                                            st.markdown(f'<span class="tag tag-strength">{s}</span>', unsafe_allow_html=True)
+                                    
+                                    with g_col:
+                                        st.caption("⚠️ Brechas / A desarrollar")
+                                        for g in result.get('gaps', []):
+                                            st.markdown(f'<span class="tag tag-gap">{g}</span>', unsafe_allow_html=True)
+                                    
+                                    # Alerta de Seguridad
+                                    security_warning = result.get('security_warning')
+                                    if security_warning:
+                                         st.markdown(f'<div class="security-alert">🚨 {security_warning}</div>', unsafe_allow_html=True)
+
+                                st.markdown('</div>', unsafe_allow_html=True)
+                        
+                        else:
+                             st.error(f"Error al leer el archivo: {uploaded_file.name}")
+                        
+                        # Actualizar barra de progreso global
+                        progress_bar.progress((i + 1) / len(uploaded_files))
+                    
+                    st.success("Análisis Completado")
+
+        # --- Sección de Historial Local ---
+        st.markdown("---")
+        st.subheader("📜 Historial de Sesión Actual")
+
+        if st.session_state['historial_candidatos']:
+            # Mostrar en orden inverso (más reciente primero)
+            for item in reversed(st.session_state['historial_candidatos']):
+                is_rejected = item.get('score', 0) == 0
+                card_class = "history-card history-card-rejected" if is_rejected else "history-card"
+                status_badge = '<span style="color: #dc3545; font-weight: bold;">⛔ ACCESO DENEGADO</span>' if is_rejected else f"✅ Score: {item.get('score', 0)}%"
+                
+                # Generar HTML de la tarjeta
+                tags_html = ""
+                # Mostrar solo las primeras 2 fortalezas como resumen
+                for s in item.get('strengths', [])[:2]:
+                    tags_html += f'<span class="tag tag-strength">{s}</span>'
+                
+                st.markdown(f"""
+                <div class="{card_class}">
+                    <div style="flex: 2;">
+                        <div style="font-size: 1.1em; font-weight: bold;">{item['name']}</div>
+                        <div style="color: #666; font-size: 0.9em;">Postulando a: {item['vacancy']}</div>
+                    </div>
+                    <div style="flex: 3; padding: 0 15px;">
+                        {tags_html}
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <div style="font-size: 1.2em;">{status_badge}</div>
+                    </div>
                 </div>
-                <div style="flex: 3; padding: 0 15px;">
-                    {tags_html}
-                </div>
-                <div style="flex: 1; text-align: right;">
-                    <div style="font-size: 1.2em;">{status_badge}</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.info("Aún no hay evaluaciones registradas en esta sesión.")
+                """, unsafe_allow_html=True)
+        else:
+            st.info("Aún no hay evaluaciones registradas en esta sesión.")
+    
+    with tab2:
+        st.header("📂 Historial de Análisis (Cloud)")
+        st.markdown("Registros persistentes recuperados de Google Firestore.")
+
+        if st.button("🔄 Refrescar Historial"):
+            st.session_state.pop('firestore_data', None)
+
+        # Cargar datos
+        history_data = load_history()
+        
+        if history_data:
+            df = pd.DataFrame(history_data)
+            
+            # Formatear columnas
+            if 'timestamp' in df.columns:
+                df['timestamp'] = pd.to_datetime(df['timestamp']).dt.strftime('%Y-%m-%d %H:%M')
+            
+            # Reordenar columnas para mejor visualización
+            cols = ['timestamp', 'candidate_name', 'score', 'vacancy', 'recruiter', 'summary']
+            # Asegurar que existan
+            cols = [c for c in cols if c in df.columns]
+            
+            st.dataframe(
+                df[cols],
+                column_config={
+                    "timestamp": "Fecha",
+                    "candidate_name": "Candidato",
+                    "score": st.column_config.ProgressColumn("Puntaje", format="%d%%", min_value=0, max_value=100),
+                    "vacancy": "Vacante",
+                    "recruiter": "Reclutador",
+                    "summary": "Resumen IA"
+                },
+                use_container_width=True,
+                hide_index=True
+            )
+        else:
+            st.info("No hay registros en la base de datos o no hay conexión.")
 
 else:
     # --- Vista Pública (Candidatos) ---
@@ -453,4 +563,3 @@ else:
     
     st.markdown("---")
     st.info("ℹ️ Este es un canal seguro. Tus datos serán tratados con confidencialidad.")
-

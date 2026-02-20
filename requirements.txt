@@ -23,3 +23,6 @@ pillow>=10.0.0
 # Autenticación
 streamlit-authenticator>=0.3.0
 pyyaml>=6.0
+
+# Base de Datos
+google-cloud-firestore>=2.14.0

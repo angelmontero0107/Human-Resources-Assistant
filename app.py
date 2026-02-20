@@ -16,8 +16,8 @@ import base64
 
 # --- configuración de la página ---
 st.set_page_config(
-    page_title="Asistente de RH - Análisis de CVs",
-    page_icon="👔",
+    page_title="TalentForge AI",
+    page_icon="icon.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -175,14 +175,15 @@ with st.sidebar:
             st.markdown(
                 f"""
                 <div style="
-                    background-color: white; 
+                    background: rgba(255, 255, 255, 0.05); 
                     padding: 15px; 
-                    border-radius: 10px; 
+                    border-radius: 12px; 
                     margin-bottom: 5px; 
                     text-align: center;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    backdrop-filter: blur(5px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
                 ">
-                    <img src="data:image/png;base64,{encoded_image}" style="width: 180px; max-width: 100%;">
+                    <img src="data:image/png;base64,{encoded_image}" style="width: 180px; max-width: 100%; filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.5));">
                 </div>
                 """, 
                 unsafe_allow_html=True
@@ -386,7 +387,12 @@ def load_history(recruiter_username=None):
 # --- UI Principal ---
 
 if st.session_state["authentication_status"]:
-    st.title("🤖 Asistente de RH - Analizador Inteligente")
+    # Nueva Cabecera con Branding
+    col_icon, col_title = st.columns([1, 8], gap="small")
+    with col_icon:
+        st.image("icon.png", width=60)
+    with col_title:
+        st.title("TalentForge AI")
     
     tab1, tab2 = st.tabs(["🔍 Nuevo Análisis", "📂 Historial Cloud"])
 

@@ -474,26 +474,24 @@ if st.session_state["authentication_status"]:
     # --- POST LOGIN VIEW ---
     st.markdown("""
 <div class="top-header-container">
-    <div class="admin-info">
-        <div class="admin-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        </div>
-        <div class="admin-text">
-            <h3>Administrador RH</h3>
-            <p>Administrador</p>
-        </div>
-    </div>
-    
-    <div class="title-center">
-        <h1>Asistente de Recursos Humanos</h1>
-        <p>Analiza CVs de candidatos con Gemini AI y encuentra la coincidencia perfecta</p>
-    </div>
-    
-    <div class="logout-btn-container" style="visibility: hidden;">
-        <!-- Placeholder para el layout flexbox en HTML crudo -->
-    </div>
+<div class="admin-info">
+<div class="admin-icon">
+<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
 </div>
-    """, unsafe_allow_html=True)
+<div class="admin-text">
+<h3>Administrador RH</h3>
+<p>Administrador</p>
+</div>
+</div>
+<div class="title-center">
+<h1>Asistente de Recursos Humanos</h1>
+<p>Analiza CVs de candidatos con Gemini AI y encuentra la coincidencia perfecta</p>
+</div>
+<div class="logout-btn-container" style="visibility: hidden;">
+<!-- Placeholder para el layout flexbox en HTML crudo -->
+</div>
+</div>
+""", unsafe_allow_html=True)
     
     # Renderizamos el botón de logout de streamlit usando layout de columnas para colocarlo a la derecha (hack)
     _, col_logout = st.columns([8, 1])

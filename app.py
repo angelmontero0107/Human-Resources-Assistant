@@ -606,52 +606,71 @@ if not st.session_state["authentication_status"]:
                 <h1>Asistente de RH</h1>
                 <p>Inicia sesión para analizar candidatos</p>
             </div>
-            
-            <div class="login-card">
-                <h2>Iniciar Sesión</h2>
-                <p>Accede con tus credenciales de Recursos Humanos</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Override the streamlit authenticator specific CSS to match Figma inside this container
+        # Override the streamlit authenticator specific CSS inside the container
         st.markdown("""
         <style>
-            /* Hack to make the Streamlit Authenticator fit our login-card div */
-            [data-testid="stForm"] {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) {
                 background: #FFFFFF !important;
+                padding: 32px !important;
+                border-radius: 12px !important;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+                max-width: 440px !important;
+                margin: 0 auto !important;
+            }
+            /* Make the stForm transparent since the container is white */
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) [data-testid="stForm"] {
+                background: transparent !important;
                 border: none !important;
                 padding: 0 !important;
                 box-shadow: none !important;
             }
-            [data-testid="stForm"] > div:last-child {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) [data-testid="stForm"] > div:last-child {
                 border-top: 1px solid #E5E7EB;
                 padding-top: 24px;
                 margin-top: 24px;
             }
-            [data-testid="stForm"] div[data-testid="stButton"] button {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) [data-testid="stButton"] button {
                  background-color: #0F172A !important; 
                  color: white !important;
                  border-radius: 8px !important;
                  width: 100%;
                  font-weight: 500 !important;
             }
+            /* Hide default Login header from authenticator */
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) h1,
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) h2,
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) h3 {
+                display: none;
+            }
+            /* Show our custom headers */
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) .custom-login-header {
+                display: block !important;
+            }
         </style>
         """, unsafe_allow_html=True)
         
         # We wrap the login inside our own UI container by just calling it here
-        # Note: the widget will create its own Form.
-        try:
-            authenticator.login("main")
-        except Exception as e:
-            st.error(e)
+        with st.container():
+            st.markdown('<div class="login-card-anchor"></div>', unsafe_allow_html=True)
+            st.markdown(
+                '<h2 class="custom-login-header" style="font-size: 1.25rem; font-weight: 600; margin-bottom: 4px; color: #111827;">Iniciar Sesión</h2>'
+                '<p class="custom-login-header" style="color: #6B7280; font-size: 0.9rem; margin-bottom: 24px;">Accede con tus credenciales de Recursos Humanos</p>',
+                unsafe_allow_html=True
+            )
             
-        if st.session_state["authentication_status"] is False:
-             st.error('Usuario/Contraseña incorrecta')
-             
-        # Footer in the login card
-        st.markdown("""
-        <div style="text-align: center; margin-top: 24px; color: #111827; font-weight: 500; font-size: 0.9rem;">
-            Ver credenciales de demostración
-        </div>
-        </div>
-        """, unsafe_allow_html=True)
+            try:
+                authenticator.login("main")
+            except Exception as e:
+                st.error(e)
+                
+            if st.session_state["authentication_status"] is False:
+                 st.error('Usuario/Contraseña incorrecta')
+                 
+            # Footer in the login card
+            st.markdown(
+                '<div style="text-align: center; margin-top: 24px; color: #111827; font-weight: 500; font-size: 0.9rem;">Ver credenciales de demostración</div>',
+                unsafe_allow_html=True
+            )

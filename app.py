@@ -117,6 +117,13 @@ st.markdown("""
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
         color: #F9FAFB !important;
     }
+    
+    /* Placeholders */
+    [data-testid="stSidebar"] ::placeholder {
+        color: #9CA3AF !important;
+        opacity: 1;
+    }
+
     [data-testid="stSidebar"] .stTextInput > div > div, 
     [data-testid="stSidebar"] .stTextArea > div > div {
         background-color: #374151 !important;
@@ -125,16 +132,29 @@ st.markdown("""
     [data-testid="stSidebar"] .stTextInput input, 
     [data-testid="stSidebar"] .stTextArea textarea {
         color: #F9FAFB !important;
+        background-color: transparent !important;
     }
-    [data-testid="stSidebar"] .streamlit-expanderHeader {
+    
+    /* Expander Configuración */
+    [data-testid="stSidebar"] [data-testid="stExpander"] details summary {
         background-color: #374151 !important;
         color: #F9FAFB !important;
         border-radius: 4px;
+        padding: 0.5rem;
     }
+    [data-testid="stSidebar"] [data-testid="stExpander"] details summary p {
+        color: #F9FAFB !important;
+        font-weight: 600;
+    }
+
+    /* Buttons */
     [data-testid="stSidebar"] div.stButton > button {
         background-color: #374151 !important;
         color: #F9FAFB !important;
         border: 1px solid #4B5563 !important;
+    }
+    [data-testid="stSidebar"] div.stButton > button p {
+        color: #F9FAFB !important;
     }
     [data-testid="stSidebar"] div.stButton > button:hover {
         background-color: #4B5563 !important;
@@ -445,7 +465,6 @@ if st.session_state["authentication_status"]:
                     <p class="top-header-subtitle">Smart Recruitment Solutions</p>
                 </div>
             </div>
-            <div class="top-header-button">logo.png</div>
         </div>
     ''', unsafe_allow_html=True)
     

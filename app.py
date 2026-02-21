@@ -609,30 +609,31 @@ if not st.session_state["authentication_status"]:
         </div>
         """, unsafe_allow_html=True)
         
-        # Override the streamlit authenticator specific CSS inside the container
         st.markdown("""
         <style>
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) {
+            /* Target ONLY the deepest container protecting from recursive padding issues */
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) {
                 background: #FFFFFF !important;
-                padding: 32px !important;
+                padding: 40px 32px !important;
                 border-radius: 12px !important;
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
                 max-width: 440px !important;
                 margin: 0 auto !important;
+                width: 100% !important;
             }
             /* Make the stForm transparent since the container is white */
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) [data-testid="stForm"] {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) [data-testid="stForm"] {
                 background: transparent !important;
                 border: none !important;
                 padding: 0 !important;
                 box-shadow: none !important;
             }
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) [data-testid="stForm"] > div:last-child {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) [data-testid="stForm"] > div:last-child {
                 border-top: 1px solid #E5E7EB;
                 padding-top: 24px;
                 margin-top: 24px;
             }
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) [data-testid="stButton"] button {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) [data-testid="stButton"] button {
                  background-color: #0F172A !important; 
                  color: white !important;
                  border-radius: 8px !important;
@@ -640,13 +641,13 @@ if not st.session_state["authentication_status"]:
                  font-weight: 500 !important;
             }
             /* Hide default Login header from authenticator */
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) h1,
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) h2,
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) h3 {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) h1,
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) h2,
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) h3 {
                 display: none;
             }
             /* Show our custom headers */
-            div[data-testid="stVerticalBlock"]:has(.login-card-anchor) .custom-login-header {
+            div[data-testid="stVerticalBlock"]:has(.login-card-anchor):not(:has(div[data-testid="stVerticalBlock"]:has(.login-card-anchor))) .custom-login-header {
                 display: block !important;
             }
         </style>

@@ -57,6 +57,83 @@ def get_db():
 
 db = get_db()
 
+def extract_text_from_pdf(uploaded_file):
+    text = ""
+    try:
+        if uploaded_file.name.endswith('.pdf'):
+            with pdfplumber.open(uploaded_file) as pdf:
+                for page in pdf.pages:
+                    text += page.extract_text() + "\n"
+        elif uploaded_file.name.endswith(('.txt', '.md')):
+            text = uploaded_file.read().decode('utf-8')
+        else:
+            text = uploaded_file.read().decode('utf-8', errors='ignore')
+    except Exception as e:
+        st.error(f"Error extrayendo texto: {e}")
+    return text
+
+def evaluar_cv(text, job_description, api_key):
+    try:
+        client = genai.Client(api_key=api_key)
+        
+        prompt = f"""Eres un experto analista de recursos humanos. Analiza el siguiente CV en relación con la vacante especificada.
+
+VACANTE:
+{job_description}
+
+CV DEL CANDIDATO:
+{text}
+
+Por favor proporciona un análisis en formato JSON con la siguiente estructura exacta:
+{{
+  "acceptancePercentage": [número entre 0-100],
+  "strengths": ["fortaleza 1", "fortaleza 2", "fortaleza 3"],
+  "weaknesses": ["debilidad 1", "debilidad 2", "debilidad 3"]
+}}
+
+Las fortalezas deben ser aspectos positivos del candidato en relación con la vacante (máximo 5).
+Las debilidades deben ser aspectos que le faltan o son deficientes (máximo 5).
+El porcentaje de aceptación debe reflejar qué tan bien encaja el candidato con la vacante.
+"""
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+        )
+        resp_text = response.text
+        if "```json" in resp_text:
+            resp_text = resp_text.split("```json")[1].split("```")[0]
+        elif "```" in resp_text:
+            resp_text = resp_text.split("```")[1].split("```")[0]
+            
+        data = json.loads(resp_text.strip())
+        
+        return {
+            "score": data.get("acceptancePercentage", 0),
+            "strengths": data.get("strengths", []),
+            "gaps": data.get("weaknesses", []),
+            "summary": "Análisis completado basado en fortalezas y debilidades encontradas."
+        }
+    except Exception as e:
+        st.error(f"Error evaluando CV con Gemini: {e}")
+        return {"score": 0, "strengths": [], "gaps": [], "summary": f"Error: {e}"}
+
+def save_to_firestore(analysis_data, username):
+    if db is None:
+        return
+    try:
+        doc_ref = db.collection('analisis_cv').document()
+        doc_data = {
+            "timestamp": firestore.SERVER_TIMESTAMP,
+            "recruiter": username,
+            "candidate_name": analysis_data.get("name", "Unknown"),
+            "vacancy": analysis_data.get("vacancy", "Unknown"),
+            "score": analysis_data.get("score", 0),
+            "summary": analysis_data.get("summary", ""),
+        }
+        doc_ref.set(doc_data)
+    except Exception as e:
+        print(f"Error guardando en Firestore: {e}")
+
 # --- estilos custom (Figma Redesign) ---
 st.markdown("""
 <style>

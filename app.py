@@ -114,13 +114,13 @@ st.markdown("""
         background-color: #1F2937;
         border-right: 1px solid #374151;
     }
-    [data-testid="stSidebar"] * {
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label {
         color: #F9FAFB !important;
     }
     [data-testid="stSidebar"] .stTextInput > div > div, 
     [data-testid="stSidebar"] .stTextArea > div > div {
         background-color: #374151 !important;
-        border: 1px solid #4B5563;
+        border: 1px solid #4B5563 !important;
     }
     [data-testid="stSidebar"] .stTextInput input, 
     [data-testid="stSidebar"] .stTextArea textarea {
@@ -130,6 +130,15 @@ st.markdown("""
         background-color: #374151 !important;
         color: #F9FAFB !important;
         border-radius: 4px;
+    }
+    [data-testid="stSidebar"] div.stButton > button {
+        background-color: #374151 !important;
+        color: #F9FAFB !important;
+        border: 1px solid #4B5563 !important;
+    }
+    [data-testid="stSidebar"] div.stButton > button:hover {
+        background-color: #4B5563 !important;
+        border: 1px solid #9CA3AF !important;
     }
     
     /* Layout Containers for Sections */
@@ -620,7 +629,8 @@ if st.session_state["authentication_status"]:
         else:
             st.info("Aún no hay evaluaciones registradas en esta sesión.")
     
-    with tab2:
+    st.markdown("---")
+    with st.expander("📂 Historial de Análisis Global", expanded=False):
         # Encabezado con columnas
         h_col1, h_col2 = st.columns([3, 1])
         
